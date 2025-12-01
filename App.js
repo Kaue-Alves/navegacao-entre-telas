@@ -1,130 +1,54 @@
-import { StatusBar } from "expo-status-bar";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { NavigationContainer } from "@react-navigation/native";
 import { useState } from "react";
-import {
-    StyleSheet,
-    Text,
-    View,
-    TextInput,
-    Button,
-    Pressable,
-} from "react-native";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { StyleSheet } from "react-native";
+import CadastroScreen from "./screens/CadastroScreen";
+import ProdutosScreen from "./screens/ProdutosScreen";
+import { Plus, List, ListCheck, X, Package, PackageOpen, CirclePlus } from "lucide-react-native";
 
 export default function App() {
-    const [produto, setProduto] = useState("");
-    const [isFocused, setIsFocused] = useState(false);
 
-  const handleSubmit = () => {
-    alert(`Nome do produto: ${produto}`)
-    setProduto("")
-    }
-  
+    const Tab = createBottomTabNavigator();
+
     return (
-        <SafeAreaProvider>
-            <SafeAreaView style={styles.container}>
-                <View style={styles.content}>
-                    <Text style={styles.title}>Cadastro de Produtos</Text>
+        <NavigationContainer>
+            <Tab.Navigator
+                screenOptions={({ route }) => ({
+                    tabBarIcon: ({ focused, color, size }) => {
 
-                    <View style={styles.inputContainer}>
-                        <Text style={styles.label}>Nome do Produto</Text>
-                        <TextInput
-                            value={produto}
-                            onChangeText={setProduto}
-                            onFocus={() => setIsFocused(true)}
-                            onBlur={() => setIsFocused(false)}
-                            style={[
-                                styles.inputTexto,
-                                isFocused && styles.inputFocused,
-                            ]}
-                            placeholder="Digite o nome do produto"
-                            placeholderTextColor="#999"
-                        />
-                    </View>
+                        color = "#F06543"
 
-                    <View style={styles.buttonContainer}>
-                        <Pressable style={styles.button} onPress={handleSubmit}>
-                            <Text style={styles.buttonText}>Cadastrar</Text>
-                        </Pressable>
-                        {/* <TextInput
-                            value={produto}
-                            onChangeText={setProduto}
-                            onFocus={() => setIsFocused(true)}
-                            onBlur={() => setIsFocused(false)}
-                            style={[
-                                styles.inputTexto,
-                                isFocused && styles.inputFocused,
-                            ]}
-                            placeholder="Digite o nome do produto"
-                            placeholderTextColor="#999"
-                        /> */}
-                    </View>
+                        if (route.name === "Cadastro de Produtos") {
 
-                    <StatusBar style="auto" />
-                </View>
-            </SafeAreaView>
-        </SafeAreaProvider>
+                            if (focused) {
+                                return <CirclePlus size={size} color={color} />
+                            } else {
+                                return <Plus size={size} color={color} />
+                            }
+
+                        } else if (route.name === "Ver Lista de Produtos") {
+
+                            if (focused) {
+                                return <PackageOpen size={size} color={color} />
+                            } else {
+                                return <Package size={size} color={color} />
+                            }
+                        }
+                    },
+                })}
+            >
+                <Tab.Screen
+                    name="Cadastro de Produtos"
+                    component={CadastroScreen}
+                    options={{ title: "Cadastrar Produto" }}
+                />
+                <Tab.Screen
+                    name="Ver Lista de Produtos"
+                    component={ProdutosScreen}
+                />
+            </Tab.Navigator>
+        </NavigationContainer>
     );
 }
 
 //cores: "#F06543", "#E8E9EB", "#E0DFD5"
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#E8E9EB",
-    },
-    content: {
-        flex: 1,
-        paddingHorizontal: 24,
-        paddingVertical: 32,
-        alignItems: "center",
-        justifyContent: "center",
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: "700",
-        color: "#333",
-        marginBottom: 32,
-        textAlign: "center",
-    },
-    inputContainer: {
-        width: "100%",
-        marginBottom: 16,
-    },
-    label: {
-        fontSize: 14,
-        fontWeight: "600",
-        color: "#555",
-        marginBottom: 8,
-    },
-    inputTexto: {
-        width: "100%",
-        height: 48,
-        backgroundColor: "#E0DFD5",
-        borderWidth: 1,
-        borderColor: "#ccc",
-        borderRadius: 8,
-        paddingHorizontal: 16,
-        fontSize: 16,
-        color: "#333",
-    },
-    inputFocused: {
-        borderColor: "#F06543",
-        borderWidth: 2,
-  }, buttonContainer: {
-      width: "100%",
-        marginBottom: 16,
-  }, button: {
-      width: "100%",
-      height: 48,
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      backgroundColor: "#F06543",
-      borderRadius: 8,
-  } ,buttonText: { 
-      color: "white",
-      fontSize: 18,
-      fontWeight: 400,
-    }
-});
