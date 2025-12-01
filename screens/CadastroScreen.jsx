@@ -1,24 +1,36 @@
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
-import {
-    StyleSheet,
-    Text,
-    View,
-    TextInput,
-    Button,
-    Pressable,
-} from "react-native";
+import { StyleSheet, Text, View, TextInput, Pressable } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+
+import lista from "../data/lista";
 
 export default function CadastroScreen() {
     const [produto, setProduto] = useState("");
-    const [isFocused, setIsFocused] = useState(false);
+    const [imagem, setImagem] = useState("");
+    const [isNomeFocused, setIsNomeFocused] = useState(false);
+    const [isImagemFocused, setIsImagemFocused] = useState(false);
 
-  const handleSubmit = () => {
-    alert(`Nome do produto: ${produto}`)
-    setProduto("")
-    }
-  
+    const handleSubmit = () => {
+        let tamanho = lista.length;
+
+        if (produto !== "") {
+            lista.push({
+                id: tamanho + 1,
+                nome: produto,
+                imagem: imagem,
+            });
+
+            alert("produto inserido com sucesso!");
+            setProduto("");
+            setImagem("");
+            return;
+        }
+
+        alert("Digite o nome do produto!");
+        return;
+    };
+
     return (
         <SafeAreaProvider>
             <SafeAreaView style={styles.container}>
@@ -30,13 +42,29 @@ export default function CadastroScreen() {
                         <TextInput
                             value={produto}
                             onChangeText={setProduto}
-                            onFocus={() => setIsFocused(true)}
-                            onBlur={() => setIsFocused(false)}
+                            onFocus={() => setIsNomeFocused(true)}
+                            onBlur={() => setIsNomeFocused(false)}
                             style={[
                                 styles.inputTexto,
-                                isFocused && styles.inputFocused,
+                                isNomeFocused && styles.inputFocused,
                             ]}
                             placeholder="Digite o nome do produto"
+                            placeholderTextColor="#999"
+                        />
+                    </View>
+
+                    <View style={styles.inputContainer}>
+                        <Text style={styles.label}>Imagem do Produto</Text>
+                        <TextInput
+                            value={imagem}
+                            onChangeText={setImagem}
+                            onFocus={() => setIsImagemFocused(true)}
+                            onBlur={() => setIsImagemFocused(false)}
+                            style={[
+                                styles.inputTexto,
+                                isImagemFocused && styles.inputFocused,
+                            ]}
+                            placeholder="Digite o link para imagem do produto"
                             placeholderTextColor="#999"
                         />
                     </View>
@@ -45,18 +73,6 @@ export default function CadastroScreen() {
                         <Pressable style={styles.button} onPress={handleSubmit}>
                             <Text style={styles.buttonText}>Cadastrar</Text>
                         </Pressable>
-                        {/* <TextInput
-                            value={produto}
-                            onChangeText={setProduto}
-                            onFocus={() => setIsFocused(true)}
-                            onBlur={() => setIsFocused(false)}
-                            style={[
-                                styles.inputTexto,
-                                isFocused && styles.inputFocused,
-                            ]}
-                            placeholder="Digite o nome do produto"
-                            placeholderTextColor="#999"
-                        /> */}
                     </View>
 
                     <StatusBar style="auto" />
@@ -111,20 +127,23 @@ const styles = StyleSheet.create({
     inputFocused: {
         borderColor: "#F06543",
         borderWidth: 2,
-  }, buttonContainer: {
-      width: "100%",
+    },
+    buttonContainer: {
+        width: "100%",
         marginBottom: 16,
-  }, button: {
-      width: "100%",
-      height: 48,
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      backgroundColor: "#F06543",
-      borderRadius: 8,
-  } ,buttonText: { 
-      color: "white",
-      fontSize: 18,
-      fontWeight: 400,
-    }
+    },
+    button: {
+        width: "100%",
+        height: 48,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#F06543",
+        borderRadius: 8,
+    },
+    buttonText: {
+        color: "white",
+        fontSize: 18,
+        fontWeight: 400,
+    },
 });
